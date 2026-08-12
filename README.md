@@ -65,6 +65,8 @@ In GitHub **Settings → Pages**, set the custom domain to `trivia-app.r4rajat.c
 4. A correct response earns 20–100% of 1,000 points based on server-measured response speed. Incorrect, late, and absent responses earn zero.
 5. When the timer ends, the host dashboard moves to results automatically while it remains open; the host then chooses the next question. After question 20, it shows the podium.
 
+GitHub Pages does not natively rewrite single-page-app routes. QR codes therefore open the site root with join parameters, and the included `404.html` restores direct player or host routes after a browser refresh.
+
 ## Operational notes
 
 - Keep the host dashboard open during play. It is the intentional game-state authority and advances the display to results after each timer expires.

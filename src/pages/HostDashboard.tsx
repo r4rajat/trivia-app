@@ -13,7 +13,9 @@ import type { AnswerStats } from '../types/game'
 export function HostDashboard() {
   const { gamePin = '' } = useParams(); const { game, players, question, loading, error, refresh } = useGame(gamePin)
   const session = getSession(gamePin); const [actionBusy, setActionBusy] = useState(false); const [stats, setStats] = useState<AnswerStats[]>([]); const [actionError, setActionError] = useState('')
-  const joinUrl = useMemo(() => `${window.location.origin}${import.meta.env.BASE_URL}join?pin=${gamePin}`, [gamePin])
+  // GitHub Pages does not rewrite /join to index.html. The root URL is always
+  // served, and App routes this query string to the join screen.
+  const joinUrl = useMemo(() => `${window.location.origin}${import.meta.env.BASE_URL}?join=1&pin=${gamePin}`, [gamePin])
   useEffect(() => { if (game?.status === 'QUESTION_RESULTS' || game?.status === 'QUESTION_ACTIVE') gameService.getStats(game.id).then(setStats).catch(() => setStats([])) }, [game?.id, game?.status, players])
   async function control(action: 'start' | 'next' | 'end') { if (!game || !session?.hostToken) return setActionError('This browser does not have the host key. Create the game here or restore the host session.')
     setActionBusy(true); setActionError(''); try { await gameService.controlGame(game.id, session.hostToken, action); await refresh() } catch (err) { setActionError(err instanceof Error ? err.message : 'Game action failed.') } finally { setActionBusy(false) } }

@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8"><title>Opening Independence Day Trivia…</title></head>
+  <body>
+    <script>
+      // GitHub Pages has no SPA rewrite support. Preserve a direct route (such
+      // as a player or host refresh), then hand it back to React at the root.
+      sessionStorage.setItem('independence-trivia:redirect', location.pathname + location.search + location.hash)
+      location.replace('/')
+    </script>
+  </body>
+</html>
