@@ -11,6 +11,7 @@ export const gameService = {
   getPlayers: async (gameId: string) => { const { data, error } = await client().from('players').select('*').eq('game_id', gameId); if (error) throw error; return data as Player[] },
   getQuestion: (gameId: string) => rpc<PublicQuestion | null>('get_current_question', { p_game_id: gameId }),
   getStats: (gameId: string) => rpc<AnswerStats[]>('get_answer_stats', { p_game_id: gameId }),
+  getCorrectOption: (gameId: string, hostToken: string) => rpc<number>('get_correct_option', { p_game_id: gameId, p_host_token: hostToken }),
   controlGame: (gameId: string, token: string, action: 'start' | 'next' | 'end') => rpc<Game>('control_game', { p_game_id: gameId, p_host_token: token, p_action: action }),
   submitAnswer: (gameId: string, playerId: string, token: string, option: number) => rpc<{ points_awarded: number }>('submit_answer', { p_game_id: gameId, p_player_id: playerId, p_player_token: token, p_selected_option: option }),
 }

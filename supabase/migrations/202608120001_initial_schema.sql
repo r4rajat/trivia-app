@@ -124,6 +124,23 @@ language sql security definer set search_path = public as $$
   where a.game_id = p_game_id and a.question_id = q.id group by a.selected_option order by a.selected_option;
 $$;
 
+-- This is deliberately host-token protected and only succeeds after the round
+-- has ended, so the correct option is never exposed to player clients.
+create or replace function public.get_correct_option(p_game_id uuid, p_host_token uuid)
+returns smallint language plpgsql security definer set search_path = public as $$
+declare v_game games; v_option smallint;
+begin
+  if not exists (select 1 from game_hosts where game_id = p_game_id and host_token = p_host_token) then
+    raise exception 'Host session is invalid.';
+  end if;
+  select * into v_game from games where id = p_game_id;
+  if not found or v_game.status <> 'QUESTION_RESULTS' then
+    raise exception 'The correct answer is available after the question ends.';
+  end if;
+  select correct_option into v_option from questions where question_order = v_game.current_question_index + 1;
+  return v_option;
+end $$;
+
 create or replace function public.submit_answer(p_game_id uuid, p_player_id uuid, p_player_token uuid, p_selected_option smallint)
 returns jsonb language plpgsql security definer set search_path = public as $$
 declare v_game games; v_question questions; v_response numeric; v_correct boolean; v_points integer;
@@ -169,6 +186,6 @@ end $$;
 
 grant usage on schema public to anon;
 grant select on public.games, public.players to anon;
-grant execute on function public.create_game(), public.join_game(text,text), public.get_current_question(uuid), public.get_answer_stats(uuid), public.submit_answer(uuid,uuid,uuid,smallint), public.control_game(uuid,uuid,text) to anon;
+grant execute on function public.create_game(), public.join_game(text,text), public.get_current_question(uuid), public.get_answer_stats(uuid), public.get_correct_option(uuid,uuid), public.submit_answer(uuid,uuid,uuid,smallint), public.control_game(uuid,uuid,text) to anon;
 
 alter publication supabase_realtime add table public.games, public.players, public.answers;
