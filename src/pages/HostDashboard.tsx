@@ -21,7 +21,14 @@ export function HostDashboard() {
     let cancelled = false
     setCorrectOption(null)
     if (game?.status === 'QUESTION_RESULTS' && session?.hostToken) {
-      gameService.getCorrectOption(game.id, session.hostToken).then(option => { if (!cancelled) setCorrectOption(option) }).catch(() => setCorrectOption(null))
+      gameService.getCorrectOption(game.id, session.hostToken)
+        .then(option => { if (!cancelled) setCorrectOption(option) })
+        .catch(() => {
+          if (!cancelled) {
+            setCorrectOption(null)
+            setActionError('Correct-answer reveal is unavailable. Apply the Supabase host-answer-reveal migration, then refresh this page.')
+          }
+        })
     }
     return () => { cancelled = true }
   }, [game?.id, game?.status, session?.hostToken])
