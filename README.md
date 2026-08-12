@@ -38,28 +38,24 @@ npm run build
 
 ## Deploy to GitHub Pages
 
-1. Push this repository to GitHub with the repository name `india-independence-trivia`, or adjust `base` in `vite.config.ts` to match your repository name.
+1. Push this repository to GitHub. The supplied workflow is configured for the `trivia-app.r4rajat.com` custom domain, which serves from `/`.
 2. In the GitHub repository, add Actions secrets named `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 3. Go to **Settings → Pages** and select **GitHub Actions** as the source.
-4. Push to `main`. The workflow at [.github/workflows/deploy.yml](.github/workflows/deploy.yml) builds and deploys the site to `https://USERNAME.github.io/india-independence-trivia/`.
+4. Push to `main`. The workflow at [.github/workflows/deploy.yml](.github/workflows/deploy.yml) builds and deploys the site to `https://trivia-app.r4rajat.com/` once GitHub Pages and DNS are configured.
 
 The Supabase anon key is intentionally embedded at build time. Security comes from RLS and the database functions, not from hiding the anon key.
 
-### Custom domain: `r4rajat.com`
+### Custom domain: `trivia-app.r4rajat.com`
 
-The repository includes `public/CNAME`; Vite copies it to the deployed site root so GitHub Pages serves `r4rajat.com`.
+The repository includes `public/CNAME`; Vite copies it to the deployed site root so GitHub Pages serves `trivia-app.r4rajat.com`.
 
-At your DNS provider, create these records (replace `USERNAME` with your GitHub username):
+At your DNS provider, create this record:
 
 | Type | Host / name | Value |
 | --- | --- | --- |
-| `A` | `@` | `185.199.108.153` |
-| `A` | `@` | `185.199.109.153` |
-| `A` | `@` | `185.199.110.153` |
-| `A` | `@` | `185.199.111.153` |
-| `CNAME` | `www` | `USERNAME.github.io` |
+| `CNAME` | `trivia-app` | `r4rajat.github.io` |
 
-In GitHub **Settings → Pages**, set the custom domain to `r4rajat.com`, wait for DNS verification, then enable **Enforce HTTPS**. Do not create a conflicting `A`, `AAAA`, or `CNAME` record for `@`.
+In GitHub **Settings → Pages**, set the custom domain to `trivia-app.r4rajat.com`, wait for DNS verification, then enable **Enforce HTTPS**. Do not create any other `A`, `AAAA`, or `CNAME` record for `trivia-app`.
 
 ## How a game runs
 
@@ -74,4 +70,4 @@ In GitHub **Settings → Pages**, set the custom domain to `r4rajat.com`, wait f
 - Keep the host dashboard open during play. It is the intentional game-state authority and advances the display to results after each timer expires.
 - A host refresh is restored only in the browser that created the room, because the host token is deliberately private. Keep that device available during the event.
 - The default public read policies reveal lobby and leaderboard names/scores for a valid event game. Correct answers, tokens, answer selections, and score mutation endpoints remain protected.
-- GitHub Pages needs a correctly named base path. For a custom domain or a different repository name, change `vite.config.ts` and rebuild.
+- GitHub Pages needs a correctly named base path. This project is configured for the `trivia-app.r4rajat.com` custom domain; for a project-site URL without a custom domain, set `VITE_BASE_PATH` to `/trivia-app/` during the Pages build.
