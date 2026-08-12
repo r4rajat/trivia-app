@@ -22,3 +22,6 @@ insert into public.questions (question_order, question_text, option_a, option_b,
 (19, 'Who chaired the Drafting Committee of the Indian Constitution?', 'Dr. B. R. Ambedkar', 'Jawaharlal Nehru', 'Dr. Rajendra Prasad', 'B. N. Rau', 0),
 (20, 'Which princely state was integrated into the Indian Union through military action in 1948?', 'Junagadh', 'Kashmir', 'Hyderabad', 'Mysore', 2)
 on conflict (question_order) do update set question_text=excluded.question_text, option_a=excluded.option_a, option_b=excluded.option_b, option_c=excluded.option_c, option_d=excluded.option_d, correct_option=excluded.correct_option;
+
+-- Keep an existing project consistent if the seed is rerun.
+update public.questions set time_limit = 15;

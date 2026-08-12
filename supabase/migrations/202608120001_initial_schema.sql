@@ -44,7 +44,7 @@ create table public.questions (
   option_c text not null,
   option_d text not null,
   correct_option smallint not null check (correct_option between 0 and 3),
-  time_limit integer not null default 20 check (time_limit between 5 and 120),
+  time_limit integer not null default 15 check (time_limit between 5 and 120),
   points integer not null default 1000 check (points between 1 and 10000)
 );
 

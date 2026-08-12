@@ -61,7 +61,7 @@ In GitHub **Settings → Pages**, set the custom domain to `trivia-app.r4rajat.c
 
 1. The host creates a game and displays the QR code/PIN.
 2. Players enter the PIN and a unique name while the game is in the lobby.
-3. The host starts the 20-question game. Each 20-second round is anchored to a server timestamp.
+3. The host starts the 20-question game. Each 15-second round is anchored to a server timestamp.
 4. A correct response earns 20–100% of 1,000 points based on server-measured response speed. Incorrect, late, and absent responses earn zero.
 5. When the timer ends, the host dashboard moves to results automatically while it remains open; the host then chooses the next question. After question 20, it shows the podium.
 
